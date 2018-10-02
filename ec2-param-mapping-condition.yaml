@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A sample template
+Resources:
+  TechTigersEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - RegionMap
+        - Ref: AWS::Region
+        - '32'
+      Conditions:
+        Test: !Equals [ !Ref EnvType, test ]
+
+      KeyName: techtigers
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sdm"
+        Ebs:
+          VolumeType: standard
+          DeleteOnTermination: 'true'
+          VolumeSize: '30'
+Parameters:
+  SubnetIpBlocks:
+    Description: Subnet IP blocks for my VPC
+    Type: CommaDelimitedList
+    Default: 10.0.1.0/24, 192.168.1.0/24, 192.168.2.0/24
+  WebPort:
+    Default: '8080'
+    Description: Web port to be used
+    Type: Number
+    MinValue: '8080'
+    MaxValue: '8090'
+  EnvType:
+    Description: Environment type.
+    Default: test
+    Type: String
+    AllowedValues:
+    - prod
+    - staging
+    - dev
+    - test
+    ConstraintDescription: must specify prod, staging, dev, or test.
+Conditions:
+  Prod:
+    Fn::Equals:
+    - Ref: EnvType
+    - prod
+  Staging:
+    Fn::Equals:
+    - Ref: EnvType
+    - staging
+  Dev:
+    Fn::Equals:
+    - Ref: EnvType
+    - dev
+  Test:
+    Fn::Equals:
+    - Ref: EnvType
+    - test
+Mappings:
+  RegionMap:
+    us-east-1:
+      '32': ami-04681a1dbd79675a5
+      '64': ami-0ff8a91507f77f867
+    us-west-1:
+      '32': ami-0782017a917e973e7
+      '64': ami-0bdb828fd58c52235

@@ -1,0 +1,22 @@
+{
+    "Resources": {
+        "testEC2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId" : "ami-47157264",
+                "InstanceType" : "t2.micro",
+                "KeyName" : "foxutec1",
+                "BlockDeviceMappings" : [
+                  {
+                    "DeviceName" : "/dev/sdm",
+                    "Ebs" : {
+                      "VolumeType" : "standard",
+                      "DeleteOnTermination" : "true",
+                      "VolumeSize" : "30"
+                    }
+                  }
+                ]
+            }
+        }
+    }
+}

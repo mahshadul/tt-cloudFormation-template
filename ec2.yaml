@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
+
+#Option One
+Resources:
+  MyEC2Instance: #An inline comment
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-04681a1dbd79675a5"  #lets find a linux AMI
+      InstanceType: t2.micro
+      KeyName: web-key
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: standard
+            DeleteOnTermination: ture
+            VolumeSize: "30"
+
+# Option two (after paramterization)

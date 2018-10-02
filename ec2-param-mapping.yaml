@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A sample template
+Resources:
+  testEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - RegionMap
+        - Ref: AWS::Region
+        - '32'
+      InstanceType: t2.micro
+      KeyName: techtigers
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sdm"
+        Ebs:
+          VolumeType: standard
+          DeleteOnTermination: 'true'
+          VolumeSize: '30'
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+    - t2.micro
+    - m4.large
+    - m5.large
+    Description: Enter t2.micro, m4.large, or m5.large. Default is t2.micro.
+    ConstraintDescription: must be a valid EC2 instance type
+  Pwd:
+    NoEcho: 'true'
+    Description: The user password
+    Type: String
+    MinLength: '8'
+    MaxLength: '15'
+    AllowedPattern: "[a-zA-Z0-9]*"
+  SubnetIpBlocks:
+    Description: Subnet IP blocks for my VPC
+    Type: CommaDelimitedList
+    Default: 10.0.1.0/24, 192.168.1.0/24, 192.168.2.0/24
+  SSHPort:
+    Default: '22'
+    Description: SSH port to be used
+    Type: Number
+    MinValue: '1150'
+    MaxValue: '65535'
+  WebPort:
+    Default: '8080'
+    Description: Web port to be used
+    Type: Number
+    MinValue: '8080'
+    MaxValue: '8090'
+Mappings:
+  RegionMap:
+    us-east-1:
+      '32': ami-04681a1dbd79675a5
+      '64': ami-0ff8a91507f77f867
+    us-west-1:
+      '32': ami-0782017a917e973e7
+      '64': ami-0bdb828fd58c52235
